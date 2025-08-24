@@ -1,12 +1,12 @@
-# 🚀 blkprxy - The Developer's CORS Proxy
+# 🚀 blkproxy - The Developer's CORS Proxy
 
 > **Bypass CORS. Build Faster.**
 
-blkprxy is a free, zero-config CORS proxy designed for developers who need to instantly access any API during development and testing, without cross-origin restrictions. Built on Vercel's global edge network for maximum performance and reliability.
+blkproxy is a free, zero-config CORS proxy designed for developers who need to instantly access any API during development and testing, without cross-origin restrictions. Built on Vercel's global edge network for maximum performance and reliability.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkprxy)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkproxy)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fblkprxy.vercel.app%2Fapi%2Fhealth&query=%24.message&label=status&color=green)](https://blkprxy.vercel.app/api/health)
+[![Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fblkprxy.vercel.app%2Fapi%2Fhealth&query=%24.message&label=status&color=green)](https://blkproxy.vercel.app/api/health)
 
 ---
 
@@ -43,14 +43,14 @@ fetch(proxyUrl)
 
 **1-Click Deploy to Vercel:**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkprxy)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkproxy)
 
 **Or manually:**
 
 ```bash
 # Clone the repository
-git clone https://github.com/iambhvsh/blkprxy.git
-cd blkprxy
+git clone https://github.com/iambhvsh/blkproxy.git
+cd blkproxy
 
 # Deploy with Vercel CLI
 npx vercel
@@ -144,7 +144,7 @@ function MyComponent() {
 
 ### 🛡️ SSRF Protection
 
-blkprxy includes robust protection against Server-Side Request Forgery attacks:
+blkproxy includes robust protection against Server-Side Request Forgery attacks:
 
 - ✅ Only `http://` and `https://` protocols allowed
 - ✅ Blocks requests to `localhost` and private IP addresses
@@ -200,7 +200,7 @@ https://blkproxy.vercel.app/api/proxy?url=https://api.example.com/users
 ```json
 {
   "status": "ok",
-  "message": "blkprxy is operational",
+  "message": "blkproxy is operational",
   "timestamp": "2025-01-20T10:30:00.000Z"
 }
 ```
@@ -233,7 +233,7 @@ https://blkproxy.vercel.app/api/proxy?url=https://api.example.com/users
 
 ## ⚖️ Fair Use Policy
 
-blkprxy is built for the developer community with trust and transparency:
+blkproxy is built for the developer community with trust and transparency:
 
 ### ✅ Appropriate Use
 - 🛠️ **Development & Testing** - Perfect for local development and testing
@@ -257,7 +257,7 @@ blkprxy is built for the developer community with trust and transparency:
 
 ## 🌐 Browser Compatibility
 
-blkprxy works seamlessly across all modern browsers:
+blkproxy works seamlessly across all modern browsers:
 
 - ✅ **Chrome** (Latest)
 - ✅ **Firefox** (Latest) 
@@ -288,14 +288,14 @@ php -S localhost:8000
 We welcome contributions from the community! Here's how you can help:
 
 ### 🐛 Bug Reports
-Found a bug? [Open an issue](https://github.com/iambhvsh/blkprxy/issues) with:
+Found a bug? [Open an issue](https://github.com/iambhvsh/blkproxy/issues) with:
 - Clear description of the problem
 - Steps to reproduce
 - Expected vs actual behavior
 - Browser and environment details
 
 ### 💡 Feature Requests  
-Have an idea? [Start a discussion](https://github.com/iambhvsh/blkprxy/discussions) about:
+Have an idea? [Start a discussion](https://github.com/iambhvsh/blkproxy/discussions) about:
 - What problem it solves
 - Proposed implementation
 - Use cases and examples
@@ -314,9 +314,9 @@ Have an idea? [Start a discussion](https://github.com/iambhvsh/blkprxy/discussio
 ## 📈 Status & Monitoring
 
 ### 🔍 Real-time Status
-Check the current status of blkprxy:
-- 🌐 **Website**: [blkprxy.vercel.app](https://blkprxy.vercel.app)
-- 🏥 **Health Check**: [blkprxy.vercel.app/api/health](https://blkprxy.vercel.app/api/health)
+Check the current status of blkproxy:
+- 🌐 **Website**: [blkproxy.vercel.app](https://blkproxy.vercel.app)
+- 🏥 **Health Check**: [blkproxy.vercel.app/api/health](https://blkproxy.vercel.app/api/health)
 
 ### 📊 Performance
 - **Global Edge Network**: Sub-100ms response times worldwide
@@ -353,13 +353,13 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 - 🌐 Website: [iambhvsh.vercel.app](https://iambhvsh.vercel.app)
 - 📧 GitHub: [@iambhvsh](https://github.com/iambhvsh)
-- 🐦 Issues: [Report here](https://github.com/iambhvsh/blkprxy/issues)
+- 🐦 Issues: [Report here](https://github.com/iambhvsh/blkproxy/issues)
 
 ---
 
 ## ⭐ Support the Project
 
-If blkprxy helps you in your development journey:
+If blkproxy helps you in your development journey:
 
 - ⭐ **Star this repository** to show your support
 - 🐛 **Report bugs** to help us improve
@@ -372,9 +372,9 @@ If blkprxy helps you in your development journey:
 
 ### 🚀 Ready to bypass CORS and build faster?
 
-[![Deploy Now](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkprxy)
+[![Deploy Now](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkproxy)
 
-**[Visit blkprxy.vercel.app](https://blkprxy.vercel.app) to get started!**
+**[Visit blkproxy.vercel.app](https://blkproxy.vercel.app) to get started!**
 
 ---
 
