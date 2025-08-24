@@ -31,7 +31,7 @@ Simply prepend our URL to your target API endpoint:
 
 ```javascript
 const targetUrl = 'https://api.example.com/data';
-const proxyUrl = `https://blkprxy.vercel.app/api?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkprxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 fetch(proxyUrl)
   .then(response => response.json())
@@ -64,7 +64,7 @@ That's it! Your personal CORS proxy is live in seconds. 🎉
 
 ### Basic GET Request
 ```javascript
-const response = await fetch('https://blkprxy.vercel.app/api?url=https://jsonplaceholder.typicode.com/posts/1');
+const response = await fetch('https://blkprxy.vercel.app/api/proxy?url=https://jsonplaceholder.typicode.com/posts/1');
 const data = await response.json();
 console.log(data);
 ```
@@ -72,7 +72,7 @@ console.log(data);
 ### POST Request with JSON Body
 ```javascript
 const targetUrl = 'https://api.example.com/users';
-const proxyUrl = `https://blkprxy.vercel.app/api?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkprxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 fetch(proxyUrl, {
   method: 'POST',
@@ -94,7 +94,7 @@ fetch(proxyUrl, {
 import axios from 'axios';
 
 const targetUrl = 'https://api.example.com/data';
-const proxyUrl = `https://blkprxy.vercel.app/api?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkprxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 const response = await axios.get(proxyUrl);
 console.log(response.data);
@@ -110,7 +110,7 @@ function useProxyFetch(url) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const proxyUrl = `https://blkprxy.vercel.app/api?url=${encodeURIComponent(url)}`;
+    const proxyUrl = `https://blkprxy.vercel.app/api/proxy?url=${encodeURIComponent(url)}`;
     
     fetch(proxyUrl)
       .then(response => response.json())
