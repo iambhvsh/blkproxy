@@ -6,7 +6,7 @@ blkprxy is a free, zero-config CORS proxy designed for developers who need to in
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkprxy)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Status](https://img.shields.io/website?url=https%3A%2F%2Fblkprxy.vercel.app&label=API%20Status)](https://blkprxy.vercel.app)
+[![Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fblkprxy.vercel.app%2Fapi%2Fhealth&query=%24.message&label=status&color=green)](https://blkprxy.vercel.app/api/health)
 
 ---
 
