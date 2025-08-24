@@ -250,9 +250,18 @@ fetch(proxyUrl)
                     const response = await fetch(healthCheckUrl);
                     if (!response.ok) throw new Error(`Status: ${response.status}`);
                     
-                    statusIndicator.className = 'status-indicator h-2 w-2 rounded-full bg-green-500';
-                    statusText.textContent = 'All Systems Operational';
-                    statusText.className = 'text-green-400';
+                    const data = await response.json();
+                    
+                    // Validate response structure
+                    if (data.status === 'ok' && 
+                        data.message === 'blkprxy is operational.' && 
+                        typeof data.timestamp === 'string') {
+                        statusIndicator.className = 'status-indicator h-2 w-2 rounded-full bg-green-500';
+                        statusText.textContent = 'All Systems Operational';
+                        statusText.className = 'text-green-400';
+                    } else {
+                        throw new Error('Invalid health check response structure');
+                    }
 
                 } catch (error) {
                     console.error("Health check failed:", error);
