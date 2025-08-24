@@ -1,0 +1,11 @@
+{
+  "name": "guardian-gateway-cors-proxy",
+  "version": "1.0.0",
+  "description": "A secure, reliable, and universal CORS proxy for Vercel.",
+  "main": "api/proxy.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "author": "Guardian Gateway",
+  "license": "MIT"
+}
