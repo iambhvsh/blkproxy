@@ -243,15 +243,16 @@ fetch(proxyUrl)
             // Periodically checks the proxy's health endpoint and updates the UI indicator.
             const statusIndicator = document.getElementById('status-indicator');
             const statusText = document.getElementById('status-text');
-            const healthCheckUrl = 'https://blkprxy.vercel.app/api/health';
+            const healthCheckUrl = '/api/health';
             
             const checkApiStatus = async () => {
                 try {
                     const response = await fetch(healthCheckUrl);
                     if (!response.ok) throw new Error(`Status: ${response.status}`);
                     
+                    const data = await response.json();
                     statusIndicator.className = 'status-indicator h-2 w-2 rounded-full bg-green-500';
-                    statusText.textContent = 'All Systems Operational';
+                    statusText.textContent = data.message || 'blkprxy is working.';
                     statusText.className = 'text-green-400';
 
                 } catch (error) {

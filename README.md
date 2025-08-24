@@ -200,8 +200,7 @@ https://blkproxy.vercel.app/api/proxy?url=https://api.example.com/users
 ```json
 {
   "status": "ok",
-  "message": "blkprxy is operational",
-  "timestamp": "2025-01-20T10:30:00.000Z"
+  "message": "blkprxy is working."
 }
 ```
 
