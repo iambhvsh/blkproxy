@@ -99,8 +99,8 @@ export default async function handler(request) {
     if (requestedHeaders) {
       headers.set('Access-Control-Allow-Headers', requestedHeaders);
     } else {
-      // Fallback to a generous default set.
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+      // Fallback to a generous default set, including Range for media streaming.
+      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Range');
     }
 
     return new Response(null, {
@@ -128,6 +128,12 @@ export default async function handler(request) {
   forwardedHeaders.delete('host');
   forwardedHeaders.delete('referer');
   forwardedHeaders.set('Origin', new URL(targetUrl).origin);
+  
+  // Preserve Range header for streaming support (e.g., video/audio seeking)
+  const rangeHeader = request.headers.get('range');
+  if (rangeHeader) {
+    forwardedHeaders.set('Range', rangeHeader);
+  }
 
   const fetchOptions = {
     method: request.method,
@@ -174,6 +180,16 @@ export default async function handler(request) {
   // Set dynamic CORS headers
   responseHeaders.set('Access-Control-Allow-Origin', '*');
   responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+
+  // Preserve streaming-related headers for media file support
+  // These are critical for video/audio playback and seeking
+  const streamingHeaders = ['Content-Range', 'Accept-Ranges', 'Content-Length', 'Content-Type'];
+  streamingHeaders.forEach(header => {
+    const value = response.headers.get(header);
+    if (value) {
+      responseHeaders.set(header, value);
+    }
+  });
 
   // Expose all headers from the target response to the client.
   const exposedHeaders = [...response.headers.keys()].join(', ');
