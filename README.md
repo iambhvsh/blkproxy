@@ -17,6 +17,7 @@ blkproxy is a free, zero-config CORS proxy designed for developers who need to i
 - **🛡️ Secure by Default** - Built-in SSRF protection and security headers
 - **🔄 Auto-Retry** - Intelligent retry mechanism for transient network errors
 - **📱 Universal Support** - Works with any HTTP method, headers, and request body
+- **🎬 Media Streaming** - Full support for video/audio streaming with Range requests (.mp4, .mp3, .m3u8, .mkv, etc.)
 - **🌍 Global Scale** - Infinitely scalable, stateless architecture
 - **🚫 No Rate Limits** - Unlimited requests for development and testing
 - **🔒 Privacy Focused** - We don't log your request/response data
@@ -137,6 +138,33 @@ function MyComponent() {
   return <div>{JSON.stringify(data, null, 2)}</div>;
 }
 ```
+
+### Media Streaming (Video/Audio)
+```html
+<!-- Stream video files with full seeking support -->
+<video controls>
+  <source src="https://blkproxy.vercel.app/api/proxy?url=https://example.com/video.mp4" type="video/mp4">
+</video>
+
+<!-- Stream audio files -->
+<audio controls>
+  <source src="https://blkproxy.vercel.app/api/proxy?url=https://example.com/audio.mp3" type="audio/mpeg">
+</audio>
+```
+
+```javascript
+// Or use with video.js, plyr, or other media players
+const player = videojs('my-video', {
+  sources: [{
+    src: `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent('https://example.com/video.mp4')}`,
+    type: 'video/mp4'
+  }]
+});
+```
+
+**Supported formats:** `.mp4`, `.mp3`, `.m3u8` (HLS), `.mkv`, `.webm`, `.ogg`, `.wav`, and more!
+
+**Note:** The proxy automatically handles HTTP Range requests, enabling smooth seeking and buffering for media playback.
 
 ---
 

@@ -99,8 +99,8 @@ export default async function handler(request) {
     if (requestedHeaders) {
       headers.set('Access-Control-Allow-Headers', requestedHeaders);
     } else {
-      // Fallback to a generous default set.
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+      // Fallback to a generous default set, including Range for media streaming.
+      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Range');
     }
 
     return new Response(null, {

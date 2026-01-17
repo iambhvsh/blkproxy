@@ -1,11 +1,25 @@
 {
-  "name": "guardian-gateway-cors-proxy",
+  "name": "blkproxy",
   "version": "1.0.0",
-  "description": "A secure, reliable, and universal CORS proxy for Vercel.",
+  "description": "A free, zero-config CORS proxy designed for developers to instantly access any API during development and testing, without cross-origin restrictions.",
   "main": "api/proxy.js",
   "scripts": {
     "start": "vercel dev"
   },
-  "author": "Guardian Gateway",
-  "license": "MIT"
+  "author": "iambhvsh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iambhvsh/blkproxy.git"
+  },
+  "keywords": [
+    "cors",
+    "proxy",
+    "cors-proxy",
+    "api",
+    "development",
+    "vercel",
+    "streaming",
+    "media"
+  ]
 }
