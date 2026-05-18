@@ -6,7 +6,7 @@ blkproxy is a free, zero-config CORS proxy designed for developers who need to i
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkproxy)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fblkproxy.vercel.app%2Fapi%2Fhealth&query=%24.message&label=status&color=green)](https://blkproxy.vercel.app/api/health)
+[![Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fblkproxy.iambhvsh.in%2Fapi%2Fhealth&query=%24.message&label=status&color=green)](https://blkproxy.iambhvsh.in/api/health)
 
 ---
 
@@ -32,7 +32,7 @@ Simply prepend our URL to your target API endpoint:
 
 ```javascript
 const targetUrl = 'https://api.example.com/data';
-const proxyUrl = `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 fetch(proxyUrl)
   .then(response => response.json())
@@ -65,7 +65,7 @@ That's it! Your personal CORS proxy is live in seconds. 🎉
 
 ### Basic GET Request
 ```javascript
-const response = await fetch('https://blkproxy.vercel.app/api/proxy?url=https://jsonplaceholder.typicode.com/posts/1');
+const response = await fetch('https://blkproxy.iambhvsh.in/api/proxy?url=https://jsonplaceholder.typicode.com/posts/1');
 const data = await response.json();
 console.log(data);
 ```
@@ -73,7 +73,7 @@ console.log(data);
 ### POST Request with JSON Body
 ```javascript
 const targetUrl = 'https://api.example.com/users';
-const proxyUrl = `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 fetch(proxyUrl, {
   method: 'POST',
@@ -95,7 +95,7 @@ fetch(proxyUrl, {
 import axios from 'axios';
 
 const targetUrl = 'https://api.example.com/data';
-const proxyUrl = `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 const response = await axios.get(proxyUrl);
 console.log(response.data);
@@ -111,7 +111,7 @@ function useProxyFetch(url) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const proxyUrl = `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent(url)}`;
+    const proxyUrl = `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent(url)}`;
     
     fetch(proxyUrl)
       .then(response => response.json())
@@ -143,12 +143,12 @@ function MyComponent() {
 ```html
 <!-- Stream video files with full seeking support -->
 <video controls>
-  <source src="https://blkproxy.vercel.app/api/proxy?url=https://example.com/video.mp4" type="video/mp4">
+  <source src="https://blkproxy.iambhvsh.in/api/proxy?url=https://example.com/video.mp4" type="video/mp4">
 </video>
 
 <!-- Stream audio files -->
 <audio controls>
-  <source src="https://blkproxy.vercel.app/api/proxy?url=https://example.com/audio.mp3" type="audio/mpeg">
+  <source src="https://blkproxy.iambhvsh.in/api/proxy?url=https://example.com/audio.mp3" type="audio/mpeg">
 </audio>
 ```
 
@@ -156,7 +156,7 @@ function MyComponent() {
 // Or use with video.js, plyr, or other media players
 const player = videojs('my-video', {
   sources: [{
-    src: `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent('https://example.com/video.mp4')}`,
+    src: `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent('https://example.com/video.mp4')}`,
     type: 'video/mp4'
   }]
 });
@@ -217,7 +217,7 @@ All responses include comprehensive security headers:
 
 **Example:**
 ```
-https://blkproxy.vercel.app/api/proxy?url=https://api.example.com/users
+https://blkproxy.iambhvsh.in/api/proxy?url=https://api.example.com/users
 ```
 
 ### Health Check
@@ -343,8 +343,8 @@ Have an idea? [Start a discussion](https://github.com/iambhvsh/blkproxy/discussi
 
 ### 🔍 Real-time Status
 Check the current status of blkproxy:
-- 🌐 **Website**: [blkproxy.vercel.app](https://blkproxy.vercel.app)
-- 🏥 **Health Check**: [blkproxy.vercel.app/api/health](https://blkproxy.vercel.app/api/health)
+- 🌐 **Website**: [blkproxy.iambhvsh.in](https://blkproxy.iambhvsh.in)
+- 🏥 **Health Check**: [blkproxy.iambhvsh.in/api/health](https://blkproxy.iambhvsh.in/api/health)
 
 ### 📊 Performance
 - **Global Edge Network**: Sub-100ms response times worldwide
@@ -379,7 +379,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **Made with ❤️ by [iambhvsh](https://github.com/iambhvsh)**
 
-- 🌐 Website: [iambhvsh.vercel.app](https://iambhvsh.vercel.app)
+- 🌐 Website: [iambhvsh.in](https://iambhvsh.in)
 - 📧 GitHub: [@iambhvsh](https://github.com/iambhvsh)
 - 🐦 Issues: [Report here](https://github.com/iambhvsh/blkproxy/issues)
 
@@ -402,7 +402,7 @@ If blkproxy helps you in your development journey:
 
 [![Deploy Now](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkproxy)
 
-**[Visit blkproxy.vercel.app](https://blkproxy.vercel.app) to get started!**
+**[Visit blkproxy.iambhvsh.in](https://blkproxy.iambhvsh.in) to get started!**
 
 ---
 
