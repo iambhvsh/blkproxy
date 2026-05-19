@@ -17,9 +17,6 @@ blkproxy is a free, zero-config CORS proxy designed for developers who need to i
 - **🛡️ Secure by Default** - Built-in SSRF protection and security headers
 - **🔄 Auto-Retry** - Intelligent retry mechanism for transient network errors
 - **📱 Universal Support** - Works with any HTTP method, headers, and request body
-- **🎬 Media Streaming** - Full support for video/audio streaming with Range requests (.mp4, .mp3, .m3u8, .mkv, etc.)
-- **🌍 Global Scale** - Infinitely scalable, stateless architecture
-- **🚫 No Rate Limits** - Unlimited requests for development and testing
 - **🔒 Privacy Focused** - We don't log your request/response data
 
 ---
@@ -139,35 +136,6 @@ function MyComponent() {
 }
 ```
 
-### Media Streaming (Video/Audio)
-```html
-<!-- Stream video files with full seeking support -->
-<video controls>
-  <source src="https://blkproxy.iambhvsh.in/api/proxy?url=https://example.com/video.mp4" type="video/mp4">
-</video>
-
-<!-- Stream audio files -->
-<audio controls>
-  <source src="https://blkproxy.iambhvsh.in/api/proxy?url=https://example.com/audio.mp3" type="audio/mpeg">
-</audio>
-```
-
-```javascript
-// Or use with video.js, plyr, or other media players
-const player = videojs('my-video', {
-  sources: [{
-    src: `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent('https://example.com/video.mp4')}`,
-    type: 'video/mp4'
-  }]
-});
-```
-
-**Supported formats:** `.mp4`, `.mp3`, `.m3u8` (HLS), `.mkv`, `.webm`, `.ogg`, `.wav`, and more!
-
-**Note:** The proxy automatically handles HTTP Range requests, enabling smooth seeking and buffering for media playback.
-
----
-
 ## 🔒 Security Features
 
 ### 🛡️ SSRF Protection
@@ -178,6 +146,14 @@ blkproxy includes robust protection against Server-Side Request Forgery attacks:
 - ✅ Blocks requests to `localhost` and private IP addresses
 - ✅ Validates URL format before processing
 - ✅ Optional hostname whitelist for production use
+
+### ⚖️ Fair-Use Limits
+
+To ensure reliability and sustainability of the public instance, fair-use protections and response limits were introduced after significant unexpected public traffic.
+
+- **Rate Limiting:** Maximum 30 requests per minute per IP.
+- **Response Size Limit:** Maximum 5MB per request.
+- **Media Streaming Disabled:** To prevent proxy abuse for streaming large files, media streaming (e.g., video, audio) is not supported. File extensions like `.mp4`, `.mp3`, `.m3u8`, `.mkv` are blocked, as well as `Range` headers and media content types.
 
 ### 🔐 Production Whitelist
 
@@ -256,30 +232,6 @@ https://blkproxy.iambhvsh.in/api/proxy?url=https://api.example.com/users
 - Educational projects and tutorials
 - API integration workshops
 - Demonstrate web technologies
-
----
-
-## ⚖️ Fair Use Policy
-
-blkproxy is built for the developer community with trust and transparency:
-
-### ✅ Appropriate Use
-- 🛠️ **Development & Testing** - Perfect for local development and testing
-- 🎓 **Educational Projects** - Great for learning and tutorials  
-- 🔍 **API Exploration** - Ideal for testing public APIs
-- 📱 **Prototyping** - Excellent for quick prototypes and demos
-
-### ❌ Prohibited Use
-- 🚫 **Production Applications** - Not intended for production traffic
-- 🚫 **High-Volume Scraping** - Respect rate limits of target APIs
-- 🚫 **Illegal Activities** - No malicious or illegal usage
-- 🚫 **Commercial Abuse** - Don't use for large-scale commercial operations
-
-### 🔐 Privacy Commitment
-- We **don't log** request or response bodies
-- Your data simply **passes through** the proxy  
-- No tracking, no analytics on your API calls
-- Respect for your **privacy** is paramount
 
 ---
 

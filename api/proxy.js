@@ -27,6 +27,37 @@ export const config = {
 const RETRY_COUNT = 3;
 const RETRY_DELAY_MS = 200; // Exponential backoff will be used.
 const ALLOWED_HOSTS_ENV = process.env.ALLOWED_HOSTS || ''; // Comma-separated list of allowed hostnames for production.
+const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB limit
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 30; // 30 requests per minute per IP
+
+// --- RATE LIMITING ---
+const ipRateLimits = new Map();
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW_MS;
+
+  // Clean up old entries to prevent memory leaks
+  for (const [key, { timestamp }] of ipRateLimits.entries()) {
+    if (timestamp < windowStart) {
+      ipRateLimits.delete(key);
+    }
+  }
+
+  const record = ipRateLimits.get(ip);
+  if (!record) {
+    ipRateLimits.set(ip, { count: 1, timestamp: now });
+    return true;
+  }
+
+  if (record.count >= MAX_REQUESTS_PER_WINDOW) {
+    return false;
+  }
+
+  record.count += 1;
+  return true;
+}
 
 // --- BASE SECURITY HEADERS ---
 // These are static headers added to every response to enhance security.
@@ -99,8 +130,8 @@ export default async function handler(request) {
     if (requestedHeaders) {
       headers.set('Access-Control-Allow-Headers', requestedHeaders);
     } else {
-      // Fallback to a generous default set, including Range for media streaming.
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Range');
+      // Fallback to a generous default set.
+      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     }
 
     return new Response(null, {
@@ -109,16 +140,42 @@ export default async function handler(request) {
     });
   }
 
+  const errorHeaders = { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*', ...BASE_SECURITY_HEADERS };
+
+  // --- Rate Limiting ---
+  const clientIp = request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '127.0.0.1';
+  if (!checkRateLimit(clientIp)) {
+    return new Response('Rate limit exceeded. Maximum 30 requests per minute.', {
+      status: 429,
+      headers: errorHeaders,
+    });
+  }
+
+  // --- Reject Range requests ---
+  if (request.headers.has('range') || request.headers.has('Range')) {
+    return new Response('Range requests are not supported.', {
+      status: 416, // Range Not Satisfiable
+      headers: errorHeaders,
+    });
+  }
+
   // --- Extract and Validate Target URL ---
   const requestUrl = new URL(request.url);
   const targetUrlString = requestUrl.searchParams.get('url');
   const targetUrl = getValidatedUrl(targetUrlString);
 
-  const errorHeaders = { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*', ...BASE_SECURITY_HEADERS };
-
   if (!targetUrl) {
     return new Response('Invalid or forbidden URL provided.', {
       status: 400,
+      headers: errorHeaders,
+    });
+  }
+
+  // --- Reject Media Extensions ---
+  const forbiddenExtensions = ['.mp4', '.mp3', '.m3u8', '.mkv'];
+  if (forbiddenExtensions.some(ext => targetUrl.pathname.toLowerCase().endsWith(ext))) {
+    return new Response('Media files are not supported.', {
+      status: 403,
       headers: errorHeaders,
     });
   }
@@ -163,7 +220,25 @@ export default async function handler(request) {
       });
   }
 
-  // --- Stream the Response Back to the Client ---
+  // --- Content-Length Check ---
+  const contentLength = response.headers.get('content-length');
+  if (contentLength && parseInt(contentLength, 10) > MAX_SIZE_BYTES) {
+    return new Response('Response size exceeds the 5MB limit.', {
+      status: 413, // Payload Too Large
+      headers: errorHeaders,
+    });
+  }
+
+  // --- Content-Type Check ---
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.toLowerCase().startsWith('video/') || contentType.toLowerCase().startsWith('audio/')) {
+    return new Response('Media streaming is not supported.', {
+      status: 415, // Unsupported Media Type
+      headers: errorHeaders,
+    });
+  }
+
+  // --- Stream the Response Back to the Client with Size Limiting ---
   const responseHeaders = new Headers(response.headers);
 
   // Set base security headers
@@ -179,7 +254,24 @@ export default async function handler(request) {
   const exposedHeaders = [...response.headers.keys()].join(', ');
   responseHeaders.set('Access-Control-Expose-Headers', exposedHeaders);
 
-  return new Response(response.body, {
+  let bodyStream = response.body;
+
+  if (bodyStream) {
+    let bytesLoaded = 0;
+    const transformStream = new TransformStream({
+      transform(chunk, controller) {
+        bytesLoaded += chunk.byteLength;
+        if (bytesLoaded > MAX_SIZE_BYTES) {
+          controller.error(new Error('Response size exceeds the 5MB limit.'));
+        } else {
+          controller.enqueue(chunk);
+        }
+      }
+    });
+    bodyStream = bodyStream.pipeThrough(transformStream);
+  }
+
+  return new Response(bodyStream, {
     status: response.status,
     statusText: response.statusText,
     headers: responseHeaders,
