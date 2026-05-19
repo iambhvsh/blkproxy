@@ -1,36 +1,21 @@
 /**
- * blkprxy - Universal CORS Proxy
- *
- * This is a Vercel Edge Function that acts as a universal CORS proxy.
- * It's designed to be a simple, secure, and reliable solution for developers
- * who need to bypass CORS restrictions during local development or testing.
- *
- * How it works:
- * 1. It receives a request with a `?url=<target_url>` query parameter.
- * 2. It handles OPTIONS pre-flight requests required by browsers for CORS.
- * 3. It validates the <target_url> to prevent Server-Side Request Forgery (SSRF).
- * 4. It forwards the original request (method, headers, body) to the target URL.
- * 5. It includes a retry mechanism for transient network errors.
- * 6. It pipes the response from the target URL back to the client, but with
- *    `Access-Control-Allow-Origin: *` and other security headers to ensure
- *    the browser allows the request.
- *
- * This function runs on Vercel's Edge Network for low latency globally.
+ * blkproxy
+ * A lightweight, zero-config CORS proxy for local development and testing.
  */
 
-// Opt-in to the Vercel Edge Runtime for maximum performance.
-export const config = {
-  runtime: 'edge',
+export const config = { runtime: 'edge' };
+
+const CONFIG = {
+  RETRY_COUNT: 3,
+  RETRY_DELAY_MS: 200,
+  MAX_SIZE_BYTES: 5 * 1024 * 1024,
+  RATE_LIMIT_WINDOW_MS: 60000,
+  MAX_REQUESTS_PER_WINDOW: 30,
+  FETCH_TIMEOUT_MS: 15000,
+  ENABLE_WHITELIST: false,
+  ALLOWED_HOSTS: []
 };
 
-// --- CONFIGURATION ---
-const RETRY_COUNT = 3;
-const RETRY_DELAY_MS = 200; // Exponential backoff will be used.
-const ALLOWED_HOSTS_ENV = process.env.ALLOWED_HOSTS || ''; // Comma-separated list of allowed hostnames for production.
-
-// --- BASE SECURITY HEADERS ---
-// These are static headers added to every response to enhance security.
-// CORS headers are generated dynamically.
 const BASE_SECURITY_HEADERS = {
   'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none';",
   'X-Content-Type-Options': 'nosniff',
@@ -39,16 +24,47 @@ const BASE_SECURITY_HEADERS = {
   'Referrer-Policy': 'no-referrer',
 };
 
-// --- WHITELIST ---
-// If ALLOWED_HOSTS is configured, we only allow requests to those hosts.
-const allowedHostnames = ALLOWED_HOSTS_ENV ? new Set(ALLOWED_HOSTS_ENV.split(',')) : null;
+const SAFE_FORWARD_HEADERS = new Set([
+  'accept',
+  'content-type',
+  'authorization',
+  'user-agent',
+  'accept-language',
+  'cache-control',
+  'pragma'
+]);
 
-/**
- * Validates if a URL is safe to proxy.
- * Prevents SSRF attacks by checking for valid protocols and rejecting IP addresses.
- * @param {string} urlString - The URL to validate.
- * @returns {URL|null} A URL object if valid, otherwise null.
- */
+const allowedHostnames = CONFIG.ENABLE_WHITELIST ? new Set(CONFIG.ALLOWED_HOSTS) : null;
+
+// Best-effort in-memory limiter for lightweight abuse protection.
+const ipRateLimits = new Map();
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const windowStart = now - CONFIG.RATE_LIMIT_WINDOW_MS;
+
+  for (const [key, { timestamp }] of ipRateLimits.entries()) {
+    if (timestamp < windowStart) ipRateLimits.delete(key);
+  }
+
+  const record = ipRateLimits.get(ip);
+  if (!record) {
+    ipRateLimits.set(ip, { count: 1, timestamp: now });
+    return true;
+  }
+
+  if (now - record.timestamp > CONFIG.RATE_LIMIT_WINDOW_MS) {
+    record.count = 1;
+    record.timestamp = now;
+    return true;
+  }
+
+  if (record.count >= CONFIG.MAX_REQUESTS_PER_WINDOW) return false;
+
+  record.count += 1;
+  return true;
+}
+
 function getValidatedUrl(urlString) {
   if (!urlString) {
     return null;
@@ -61,125 +77,155 @@ function getValidatedUrl(urlString) {
       return null;
     }
 
-    // 2. Hostname check: Disallow requests to 'localhost' or raw IP addresses.
-    // This is a crucial SSRF prevention step.
-    if (url.hostname === 'localhost' || /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(url.hostname)) {
-      return null;
-    }
+    const hostname = url.hostname.toLowerCase();
 
-    // 3. (Optional) Whitelist check for production environments.
-    if (allowedHostnames && !allowedHostnames.has(url.hostname)) {
-        return null;
-    }
+    const isLocalHost = hostname === 'localhost';
+    const isIPv4 = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname);
+    const isPrivateIPv4 = isIPv4 && (
+      hostname.startsWith('127.') ||
+      hostname.startsWith('10.') ||
+      hostname.startsWith('192.168.') ||
+      /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname)
+    );
+
+    const isIPv6 = hostname.startsWith('[') && hostname.endsWith(']');
+    const isPrivateIPv6 = isIPv6 && (
+      hostname === '[::1]' ||
+      hostname.startsWith('[fc') ||
+      hostname.startsWith('[fd') ||
+      hostname.startsWith('[fe80')
+    );
+
+    if (isLocalHost || isPrivateIPv4 || isPrivateIPv6) return null;
+    if (allowedHostnames && !allowedHostnames.has(hostname)) return null;
 
     return url;
-  } catch (error) {
-    // Invalid URL format.
+  } catch {
     return null;
   }
 }
 
-/**
- * The main handler for the proxy request.
- * @param {Request} request - The incoming HTTP request.
- */
 export default async function handler(request) {
-  // --- Handle OPTIONS pre-flight request ---
   if (request.method === 'OPTIONS') {
-    // Dynamically set allowed headers based on what the client is requesting.
-    const requestedHeaders = request.headers.get('access-control-request-headers');
-
     const headers = new Headers({
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': '*',
       ...BASE_SECURITY_HEADERS
     });
 
-    // If the client requests specific headers, allow them.
-    if (requestedHeaders) {
-      headers.set('Access-Control-Allow-Headers', requestedHeaders);
-    } else {
-      // Fallback to a generous default set, including Range for media streaming.
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Range');
-    }
-
-    return new Response(null, {
-      status: 204, // No Content
-      headers: headers,
-    });
+    return new Response(null, { status: 204, headers });
   }
 
-  // --- Extract and Validate Target URL ---
+  const errorHeaders = { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*', ...BASE_SECURITY_HEADERS };
+
+  let clientIp = request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '127.0.0.1';
+  if (clientIp.includes(',')) clientIp = clientIp.split(',')[0].trim();
+
+  if (!checkRateLimit(clientIp)) {
+    return new Response('Rate limit exceeded.', { status: 429, headers: errorHeaders });
+  }
+
+  if (request.headers.has('range')) {
+    return new Response('Range requests are not supported.', { status: 416, headers: errorHeaders });
+  }
+
   const requestUrl = new URL(request.url);
   const targetUrlString = requestUrl.searchParams.get('url');
   const targetUrl = getValidatedUrl(targetUrlString);
 
-  const errorHeaders = { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*', ...BASE_SECURITY_HEADERS };
-
   if (!targetUrl) {
-    return new Response('Invalid or forbidden URL provided.', {
-      status: 400,
-      headers: errorHeaders,
-    });
+    return new Response('Invalid or forbidden URL.', { status: 400, headers: errorHeaders });
   }
 
-  // --- Prepare the fetch request to the target ---
-  const forwardedHeaders = new Headers(request.headers);
-  forwardedHeaders.delete('host');
-  forwardedHeaders.delete('referer');
-  forwardedHeaders.set('Origin', new URL(targetUrl).origin);
+  const forbiddenExtensions = ['.mp4', '.mp3', '.m3u8', '.mkv'];
+  if (forbiddenExtensions.some(ext => targetUrl.pathname.toLowerCase().endsWith(ext))) {
+    return new Response('Media files are not supported.', { status: 403, headers: errorHeaders });
+  }
 
-  const fetchOptions = {
-    method: request.method,
-    headers: forwardedHeaders,
-    body: request.body,
-    redirect: 'follow',
-  };
+  const forwardedHeaders = new Headers();
+  for (const [key, value] of request.headers.entries()) {
+    if (SAFE_FORWARD_HEADERS.has(key.toLowerCase())) {
+      forwardedHeaders.set(key, value);
+    }
+  }
 
-  // --- Fetch with Retry Logic ---
   let response;
-  for (let i = 0; i < RETRY_COUNT; i++) {
+
+  for (let i = 0; i < CONFIG.RETRY_COUNT; i++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT_MS);
+
     try {
-      response = await fetch(targetUrl.toString(), fetchOptions);
-      if (response.status < 500) {
-        break;
-      }
+      response = await fetch(targetUrl.toString(), {
+        method: request.method,
+        headers: forwardedHeaders,
+        body: request.body,
+        redirect: 'follow',
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (response.status < 500) break;
     } catch (error) {
-      console.error(`Attempt ${i + 1} failed:`, error.message);
-      if (i === RETRY_COUNT - 1) {
-        return new Response('Proxy failed to connect to the target server.', {
-          status: 502, // Bad Gateway
+      clearTimeout(timeout);
+      if (i === CONFIG.RETRY_COUNT - 1) {
+        const isTimeout = error.name === 'AbortError';
+        return new Response(isTimeout ? 'Upstream timeout.' : 'Failed to connect to upstream.', {
+          status: isTimeout ? 504 : 502,
           headers: errorHeaders,
         });
       }
     }
-    await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * Math.pow(2, i)));
+    await new Promise(resolve => setTimeout(resolve, CONFIG.RETRY_DELAY_MS * Math.pow(2, i)));
   }
 
   if (!response) {
-      return new Response('The proxy encountered an unexpected error after all retries.', {
-          status: 500,
-          headers: errorHeaders,
-      });
+      return new Response('Unexpected error.', { status: 500, headers: errorHeaders });
   }
 
-  // --- Stream the Response Back to the Client ---
+  const contentLength = response.headers.get('content-length');
+  if (contentLength && parseInt(contentLength, 10) > CONFIG.MAX_SIZE_BYTES) {
+    return new Response('Response size limit exceeded.', { status: 413, headers: errorHeaders });
+  }
+
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.toLowerCase().startsWith('video/') || contentType.toLowerCase().startsWith('audio/')) {
+    return new Response('Media streaming is not supported.', { status: 415, headers: errorHeaders });
+  }
+
   const responseHeaders = new Headers(response.headers);
 
-  // Set base security headers
   Object.entries(BASE_SECURITY_HEADERS).forEach(([key, value]) => {
     responseHeaders.set(key, value);
   });
 
-  // Set dynamic CORS headers
   responseHeaders.set('Access-Control-Allow-Origin', '*');
   responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
 
-  // Expose all headers from the target response to the client.
-  const exposedHeaders = [...response.headers.keys()].join(', ');
-  responseHeaders.set('Access-Control-Expose-Headers', exposedHeaders);
+  const safeExposeHeaders = ['content-type', 'content-length', 'content-disposition', 'cache-control'];
+  const exposed = safeExposeHeaders.filter(h => responseHeaders.has(h)).join(', ');
+  if (exposed) {
+    responseHeaders.set('Access-Control-Expose-Headers', exposed);
+  }
 
-  return new Response(response.body, {
+  let bodyStream = response.body;
+
+  if (bodyStream) {
+    let bytesLoaded = 0;
+    const transformStream = new TransformStream({
+      transform(chunk, controller) {
+        bytesLoaded += chunk.byteLength;
+        if (bytesLoaded > CONFIG.MAX_SIZE_BYTES) {
+          controller.error(new Error('Response size limit exceeded.'));
+        } else {
+          controller.enqueue(chunk);
+        }
+      }
+    });
+    bodyStream = bodyStream.pipeThrough(transformStream);
+  }
+
+  return new Response(bodyStream, {
     status: response.status,
     statusText: response.statusText,
     headers: responseHeaders,
