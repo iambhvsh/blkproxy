@@ -1,21 +1,6 @@
 /**
- * blkprxy - Universal CORS Proxy
- *
- * This is a Vercel Edge Function that acts as a universal CORS proxy.
- * It's designed to be a simple, secure, and reliable solution for developers
- * who need to bypass CORS restrictions during local development or testing.
- *
- * How it works:
- * 1. It receives a request with a `?url=<target_url>` query parameter.
- * 2. It handles OPTIONS pre-flight requests required by browsers for CORS.
- * 3. It validates the <target_url> to prevent Server-Side Request Forgery (SSRF).
- * 4. It forwards the original request (method, headers, body) to the target URL.
- * 5. It includes a retry mechanism for transient network errors.
- * 6. It pipes the response from the target URL back to the client, but with
- *    `Access-Control-Allow-Origin: *` and other security headers to ensure
- *    the browser allows the request.
- *
- * This function runs on Vercel's Edge Network for low latency globally.
+ * blkproxy
+ * A lightweight, zero-config CORS proxy for local development and testing.
  */
 
 export const config = { runtime: 'edge' };
@@ -28,7 +13,7 @@ const CONFIG = {
   MAX_REQUESTS_PER_WINDOW: 30,
   FETCH_TIMEOUT_MS: 15000,
   ENABLE_WHITELIST: false,
-  ALLOWED_HOSTS: [] // e.g., ['api.github.com']
+  ALLOWED_HOSTS: []
 };
 
 const BASE_SECURITY_HEADERS = {
@@ -92,7 +77,6 @@ function getValidatedUrl(urlString) {
 
     const hostname = url.hostname.toLowerCase();
 
-    // SSRF protection
     const isLocalHost = hostname === 'localhost';
     const isIPv4 = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname);
     const isPrivateIPv4 = isIPv4 && (
@@ -102,7 +86,6 @@ function getValidatedUrl(urlString) {
       /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname)
     );
 
-    // IPv6 blocking for localhost and unique local/link-local addresses
     const isIPv6 = hostname.startsWith('[') && hostname.endsWith(']');
     const isPrivateIPv6 = isIPv6 && (
       hostname === '[::1]' ||
@@ -112,12 +95,10 @@ function getValidatedUrl(urlString) {
     );
 
     if (isLocalHost || isPrivateIPv4 || isPrivateIPv6) return null;
-
     if (allowedHostnames && !allowedHostnames.has(hostname)) return null;
 
     return url;
-  } catch (error) {
-    // Invalid URL format.
+  } catch {
     return null;
   }
 }
@@ -219,7 +200,6 @@ export default async function handler(request) {
   responseHeaders.set('Access-Control-Allow-Origin', '*');
   responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
 
-  // Expose safe headers
   const safeExposeHeaders = ['content-type', 'content-length', 'content-disposition', 'cache-control'];
   const exposed = safeExposeHeaders.filter(h => responseHeaders.has(h)).join(', ');
   if (exposed) {
