@@ -18,25 +18,20 @@
 
     <title>blkproxy - Developer CORS Proxy</title>
 
-    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' /%3E%3Cpath d='M12 16L16 12L12 8' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' /%3E%3Cpath d='M8 12H16' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' /%3E%3C/svg%3E">
     
-    <!-- External Libraries & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Internal Styles -->
     <style>
-        /* Base font and smoothing settings for better typography. */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Consistent focus ring for accessibility. */
         .focus-ring {
             @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500;
         }
@@ -65,7 +60,6 @@
 
 <body class="bg-black text-slate-300">
     
-    <!-- Header: Sticky navigation with blur effect. -->
     <header class="bg-black/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-300/10">
         <nav class="max-w-6xl mx-auto px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -92,7 +86,6 @@
         </nav>
     </header>
     
-    <!-- Main Content -->
     <main>
         <section class="text-center pt-24 pb-10 sm:pt-32 sm:pb-28 relative overflow-hidden">
             <div class="flex justify-center items-center mb-8">
@@ -218,7 +211,7 @@ fetch(proxyUrl)
                      <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg>
                 </a>
             </div>
-            <p>Built by <a href="https://iambhvsh.in" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-600 transition-colors duration-300">iambhvsh</a>.</p>
+            <p>Built by <a href="https://iambhvsh.in" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-600 transition-colors duration-300">Bhavesh</a>.</p>
         </div>
     </footer>
     
