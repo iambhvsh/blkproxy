@@ -51,7 +51,7 @@ npx vercel
 To ensure the reliability and sustainability of the public instance, the following fair-use limits are enforced:
 
 * **Rate Limiting:** 30 requests per minute per IP.
-* **Payload Size:** Maximum 5MB per request.
+* **Payload Size:** Maximum 5MB response payload.
 * **Media Disabled:** Media streaming is not supported to prevent abuse. Video and audio content types, range requests, and media extensions (.mp4, .mp3, etc.) are blocked.
 * **SSRF Protection:** Requests to localhost, private IP ranges (IPv4/IPv6), and invalid protocols are automatically blocked.
 
@@ -61,6 +61,8 @@ If you are self-hosting, these values can be adjusted in the `CONFIG` object wit
 
 ### Proxy Endpoint
 `GET/POST/PUT/PATCH/DELETE /api/proxy?url=<target>`
+
+*(Note: Public instance is limited to 30 req/min/IP, 5MB response payload, and media streaming disabled.)*
 
 ### Health Check
 `GET /api/health`

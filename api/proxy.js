@@ -35,6 +35,8 @@ const SAFE_FORWARD_HEADERS = new Set([
 ]);
 
 const allowedHostnames = CONFIG.ENABLE_WHITELIST ? new Set(CONFIG.ALLOWED_HOSTS) : null;
+
+// Best-effort in-memory limiter for lightweight abuse protection.
 const ipRateLimits = new Map();
 
 function checkRateLimit(ip) {
