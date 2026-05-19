@@ -45,7 +45,6 @@ const SAFE_FORWARD_HEADERS = new Set([
   'authorization',
   'user-agent',
   'accept-language',
-  'accept-encoding',
   'cache-control',
   'pragma'
 ]);
@@ -102,9 +101,17 @@ function getValidatedUrl(urlString) {
       hostname.startsWith('192.168.') ||
       /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(hostname)
     );
-    const isIPv6 = hostname.includes(':');
 
-    if (isLocalHost || isPrivateIPv4 || isIPv6) return null;
+    // IPv6 blocking for localhost and unique local/link-local addresses
+    const isIPv6 = hostname.startsWith('[') && hostname.endsWith(']');
+    const isPrivateIPv6 = isIPv6 && (
+      hostname === '[::1]' ||
+      hostname.startsWith('[fc') ||
+      hostname.startsWith('[fd') ||
+      hostname.startsWith('[fe80')
+    );
+
+    if (isLocalHost || isPrivateIPv4 || isPrivateIPv6) return null;
 
     if (allowedHostnames && !allowedHostnames.has(hostname)) return null;
 
@@ -117,19 +124,12 @@ function getValidatedUrl(urlString) {
 
 export default async function handler(request) {
   if (request.method === 'OPTIONS') {
-    const requestedHeaders = request.headers.get('access-control-request-headers');
-
     const headers = new Headers({
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': '*',
       ...BASE_SECURITY_HEADERS
     });
-
-    if (requestedHeaders) {
-      headers.set('Access-Control-Allow-Headers', requestedHeaders);
-    } else {
-      headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    }
 
     return new Response(null, { status: 204, headers });
   }
