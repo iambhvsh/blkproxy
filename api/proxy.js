@@ -82,6 +82,7 @@ function getValidatedUrl(urlString) {
     const isLocalHost = hostname === 'localhost';
     const isIPv4 = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname);
     const isPrivateIPv4 = isIPv4 && (
+      hostname === '0.0.0.0' ||
       hostname.startsWith('127.') ||
       hostname.startsWith('10.') ||
       hostname.startsWith('192.168.') ||
@@ -91,6 +92,7 @@ function getValidatedUrl(urlString) {
     const isIPv6 = hostname.startsWith('[') && hostname.endsWith(']');
     const isPrivateIPv6 = isIPv6 && (
       hostname === '[::1]' ||
+      hostname === '[::]' ||
       hostname.startsWith('[fc') ||
       hostname.startsWith('[fd') ||
       hostname.startsWith('[fe80')
