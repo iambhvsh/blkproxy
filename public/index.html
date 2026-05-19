@@ -2,26 +2,21 @@
 <html lang="en" class="scroll-smooth">
 
 <head>
-    <!-- Meta Information -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="blkproxy is a free, zero-config CORS proxy for developers. Instantly bypass cross-origin restrictions during development and testing.">
-    <meta name="keywords" content="CORS, proxy, CORS proxy, developer tools, API, web development, bypass CORS, javascript, fetch">
-    <meta name="author" content="iambhvsh">
+    <meta name="description" content="A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.">
     
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://blkproxy.vercel.app/">
-    <meta property="og:title" content="blkproxy - The Developer's CORS Proxy">
-    <meta property="og:description" content="A free, zero-config CORS proxy designed for developers to instantly access any API during development, without cross-origin restrictions.">
+    <meta property="og:url" content="https://blkproxy.iambhvsh.in/">
+    <meta property="og:title" content="blkproxy - Developer CORS Proxy">
+    <meta property="og:description" content="A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.">
     
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://blkproxy.vercel.app/">
-    <meta property="twitter:title" content="blkproxy - The Developer's CORS Proxy">
-    <meta property="twitter:description" content="A free, zero-config CORS proxy designed for developers to instantly access any API during development, without cross-origin restrictions.">
+    <meta property="twitter:url" content="https://blkproxy.iambhvsh.in/">
+    <meta property="twitter:title" content="blkproxy - Developer CORS Proxy">
+    <meta property="twitter:description" content="A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.">
 
-    <title>blkproxy - The Developer's CORS Proxy</title>
+    <title>blkproxy - Developer CORS Proxy</title>
 
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' /%3E%3Cpath d='M12 16L16 12L12 8' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' /%3E%3Cpath d='M8 12H16' stroke='%236366F1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' /%3E%3C/svg%3E">
@@ -50,20 +45,17 @@
             @apply focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-indigo-500;
         }
         
-        /* Custom scrollbar styling for a modern look. */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        /* Subtle pulse animation for the status indicator. */
         .status-indicator { animation: pulse 2s infinite; }
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
         
-        /* Ensures code in <pre> tags wraps correctly without causing overflow. */
         pre[class*="language-"] {
             background: #020202 !important;
             white-space: pre-wrap !important;
@@ -82,7 +74,6 @@
     <header class="bg-black/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-300/10">
         <nav class="max-w-6xl mx-auto px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo & Brand Name -->
                 <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'});">
                     <svg class="h-8 w-8 text-indigo-500" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -92,13 +83,11 @@
                     <span class="text-xl font-bold text-slate-100 tracking-wide">blkproxy</span>
                 </div>
                 
-                <!-- Desktop Navigation & API Status -->
                 <div class="flex items-center space-x-8">
                     <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-400">
                         <a href="#how-it-works" class="hover:text-indigo-400 transition-colors">How It Works</a>
-                        <a href="#fair-use" class="hover:text-indigo-400 transition-colors">Policy</a>
+                        <a href="#fair-use" class="hover:text-indigo-400 transition-colors">Fair Use Limits</a>
                     </div>
-                    <!-- Real-time API status check indicator. -->
                     <div class="status flex items-center space-x-2 text-xs font-medium" id="status-check">
                         <div class="status-indicator h-2 w-2 rounded-full bg-yellow-500" id="status-indicator"></div>
                         <span id="status-text" class="text-slate-400">Checking...</span>
@@ -110,7 +99,6 @@
     
     <!-- Main Content -->
     <main>
-        <!-- Hero Section: Main value proposition. -->
         <section class="text-center pt-24 pb-10 sm:pt-32 sm:pb-28 relative overflow-hidden">
             <div class="flex justify-center items-center mb-8">
                 <svg class="h-24 w-24 text-indigo-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -125,26 +113,25 @@
                     Bypass CORS. Build Faster.
                 </h1>
                 <p class="mt-6 max-w-2xl mx-auto text-lg text-slate-400 leading-8">
-                    A free, zero-config CORS proxy for developers to instantly access any API during development, without cross-origin restrictions.
+                    A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.
                 </p>
                 <a href="#how-it-works" class="mt-10 inline-block bg-indigo-600 text-white font-semibold px-7 py-3 rounded-lg shadow-lg shadow-indigo-600/20 hover:bg-indigo-700 transition-all transform hover:scale-105 focus-ring">
-                    Get Started
+                    View Integration
                 </a>
             </div>
         </section>
         
-        <!-- How It Works Section: Demonstrates usage with a code example. -->
         <section id="how-it-works" class="pt-20 sm:pt-24 pb-20 sm:pb-24 border-y border-slate-300/10 bg-black mt-16 sm:mt-20">
             <div class="max-w-4xl mx-auto px-6 lg:px-8">
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold tracking-tight text-slate-100">Simple Integration</h2>
-                    <p class="mt-4 text-lg text-slate-400 leading-8">Just prepend our URL to your target API endpoint. That's it.</p>
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-100">Integration</h2>
+                    <p class="mt-4 text-lg text-slate-400 leading-8">Prepend the proxy URL to your target API endpoint.</p>
                 </div>
                 
                 <div class="bg-black rounded-xl border border-slate-300/10 shadow-2xl p-4 mt-8">
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <p class="text-sm font-mono text-indigo-200 flex-grow text-center sm:text-left overflow-x-auto">
-                            https://blkproxy.vercel.app/api/proxy?url=
+                            https://blkproxy.iambhvsh.in/api/proxy?url=
                         </p>
                         <button id="copy-btn" class="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300 focus-ring flex items-center gap-2 w-full sm:w-auto justify-center flex-shrink-0">
                             <span class="material-symbols-outlined text-base">content_copy</span>
@@ -154,60 +141,50 @@
                 </div>
                 
                 <div class="mt-12">
-                    <p class="text-slate-400 mb-4 text-center">Example using JavaScript's <code>fetch</code> API:</p>
                     <pre class="rounded-2xl text-sm shadow-2xl"><code class="language-javascript">const targetUrl = 'https://api.example.com/data';
-const proxyUrl = `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 fetch(proxyUrl)
   .then(response => response.json())
-  .then(data => {
-    console.log('✅ Success:', data);
-  })
-  .catch(error => {
-    console.error('❌ Error:', error);
-  });</code></pre>
+  .then(console.log)
+  .catch(console.error);</code></pre>
                 </div>
             </div>
         </section>
         
-        <!-- Fair Use Policy Section: Guidelines and principles of the service. -->
         <section id="fair-use" class="py-20 sm:py-24">
             <div class="max-w-5xl mx-auto px-6 lg:px-8">
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold tracking-tight text-slate-100">A Tool For The Community</h2>
-                    <p class="mt-4 text-lg text-slate-400 leading-8">Built for developers, with trust and transparency in mind.</p>
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-100">Fair Use Limits</h2>
+                    <p class="mt-4 text-lg text-slate-400 leading-8">To ensure reliability and sustainability of the public instance, fair use protections are enforced.</p>
                 </div>
                 <div class="mt-16 grid md:grid-cols-2 gap-x-12 gap-y-12">
-                    <!-- Feature: Development Use Only -->
-                    <div class="flex items-start space-x-4">
-                        <div class="flex-shrink-0"><span class="material-symbols-outlined text-3xl text-indigo-400">developer_mode</span></div>
-                        <div>
-                            <h3 class="text-xl font-semibold text-slate-100">Development Use Only</h3>
-                            <p class="mt-2 text-slate-400 leading-7">blkproxy is intended strictly for development and testing. Do not use it in a production environment.</p>
-                        </div>
-                    </div>
-                    <!-- Feature: No Abuse -->
-                    <div class="flex items-start space-x-4">
-                        <div class="flex-shrink-0"><span class="material-symbols-outlined text-3xl text-indigo-400">gpp_bad</span></div>
-                        <div>
-                            <h3 class="text-xl font-semibold text-slate-100">No Abuse Tolerated</h3>
-                            <p class="mt-2 text-slate-400 leading-7">This is a free service. Abusive behavior (e.g., high-volume scraping, illegal activities) will result in an IP block.</p>
-                        </div>
-                    </div>
-                    <!-- Feature: No Rate Limits -->
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0"><span class="material-symbols-outlined text-3xl text-indigo-400">timer</span></div>
                         <div>
-                            <h3 class="text-xl font-semibold text-slate-100">No Rate Limits</h3>
-                            <p class="mt-2 text-slate-400 leading-7">We don't impose hard rate limits, giving you flexibility for development and debugging without interruptions.</p>
+                            <h3 class="text-xl font-semibold text-slate-100">Rate Limiting</h3>
+                            <p class="mt-2 text-slate-400 leading-7">Maximum 30 requests per minute per IP to prevent abusive traffic.</p>
                         </div>
                     </div>
-                    <!-- Feature: Privacy -->
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0"><span class="material-symbols-outlined text-3xl text-indigo-400">folder_zip</span></div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-100">Payload Limits</h3>
+                            <p class="mt-2 text-slate-400 leading-7">Responses are limited to 5MB to preserve bandwidth.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0"><span class="material-symbols-outlined text-3xl text-indigo-400">block</span></div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-slate-100">Media Disabled</h3>
+                            <p class="mt-2 text-slate-400 leading-7">Streaming of video or audio content is disabled to prevent proxy abuse for large media files.</p>
+                        </div>
+                    </div>
                     <div class="flex items-start space-x-4">
                         <div class="flex-shrink-0"><span class="material-symbols-outlined text-3xl text-indigo-400">lock</span></div>
                         <div>
                             <h3 class="text-xl font-semibold text-slate-100">Privacy Focused</h3>
-                            <p class="mt-2 text-slate-400 leading-7">We do not log request or response bodies. Your data is your own and simply passes through the proxy.</p>
+                            <p class="mt-2 text-slate-400 leading-7">We do not log request or response bodies. Your data passes safely through the edge network.</p>
                         </div>
                     </div>
                 </div>
@@ -215,10 +192,8 @@ fetch(proxyUrl)
         </section>
     </main>
     
-    <!-- Footer: Copyright, credits, and social links. -->
     <footer class="bg-black border-t border-slate-300/10">
         <div class="max-w-6xl mx-auto py-8 px-6 lg:px-8 text-center text-sm text-slate-400">
-            <!-- Social Links -->
             <div class="flex justify-center items-center space-x-6 mb-4">
                 <a href="https://github.com/iambhvsh/blkproxy" target="_blank" rel="noopener noreferrer" title="Project GitHub" class="text-slate-400 hover:text-indigo-400 transition-colors">
                     <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" /></svg>
@@ -236,11 +211,8 @@ fetch(proxyUrl)
     </footer>
     
     <script>
-        // Main script execution after the DOM is fully loaded.
         document.addEventListener('DOMContentLoaded', () => {
             
-            // --- API Status Check ---
-            // Periodically checks the proxy's health endpoint and updates the UI indicator.
             const statusIndicator = document.getElementById('status-indicator');
             const statusText = document.getElementById('status-text');
             const healthCheckUrl = '/api/health';
@@ -262,20 +234,17 @@ fetch(proxyUrl)
                 }
             };
             
-            checkApiStatus(); // Initial check on page load.
-            setInterval(checkApiStatus, 60000); // Re-check every 60 seconds.
+            checkApiStatus();
+            setInterval(checkApiStatus, 60000);
             
-            // --- Copy to Clipboard ---
-            // Handles the logic for the 'Copy' button.
             const copyBtn = document.getElementById('copy-btn');
             const copyTextSpan = document.getElementById('copy-text');
-            const proxyUrlToCopy = 'https://blkproxy.vercel.app/api/proxy?url=';
+            const proxyUrlToCopy = 'https://blkproxy.iambhvsh.in/api/proxy?url=';
             
             copyBtn.addEventListener('click', () => {
                 const textArea = document.createElement('textarea');
                 textArea.value = proxyUrlToCopy;
                 
-                // Position the temporary textarea off-screen.
                 textArea.style.position = 'fixed';
                 textArea.style.top = '-9999px';
                 textArea.style.left = '-9999px';
@@ -284,14 +253,12 @@ fetch(proxyUrl)
                 textArea.select();
                 
                 try {
-                    // Modern clipboard API with fallback.
                     if (navigator.clipboard) {
                         navigator.clipboard.writeText(proxyUrlToCopy);
                     } else {
                         document.execCommand('copy');
                     }
                     
-                    // Provide visual feedback on success.
                     copyTextSpan.textContent = 'Copied!';
                     copyBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
                     copyBtn.classList.add('bg-green-600');
@@ -304,10 +271,10 @@ fetch(proxyUrl)
                     
                 } catch (err) {
                     console.error('Failed to copy text: ', err);
-                    copyTextSpan.textContent = 'Failed!'; // Provide error feedback.
+                    copyTextSpan.textContent = 'Failed!';
                     setTimeout(() => { copyTextSpan.textContent = 'Copy'; }, 2000);
                 } finally {
-                    document.body.removeChild(textArea); // Clean up the DOM.
+                    document.body.removeChild(textArea);
                 }
             });
         });
