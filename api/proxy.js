@@ -51,6 +51,12 @@ function checkRateLimit(ip) {
     return true;
   }
 
+  if (now - record.timestamp > RATE_LIMIT_WINDOW_MS) {
+    record.count = 1;
+    record.timestamp = now;
+    return true;
+  }
+
   if (record.count >= MAX_REQUESTS_PER_WINDOW) {
     return false;
   }
@@ -143,7 +149,11 @@ export default async function handler(request) {
   const errorHeaders = { 'Content-Type': 'text/plain', 'Access-Control-Allow-Origin': '*', ...BASE_SECURITY_HEADERS };
 
   // --- Rate Limiting ---
-  const clientIp = request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '127.0.0.1';
+  let clientIp = request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '127.0.0.1';
+  if (clientIp.includes(',')) {
+    clientIp = clientIp.split(',')[0].trim();
+  }
+
   if (!checkRateLimit(clientIp)) {
     return new Response('Rate limit exceeded. Maximum 30 requests per minute.', {
       status: 429,
