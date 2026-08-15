@@ -7,12 +7,12 @@
     <meta name="description" content="A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.">
     
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://blkproxy.iambhvsh.in/">
+    <meta property="og:url" content="https://blkproxy.vercel.app/">
     <meta property="og:title" content="blkproxy - Developer CORS Proxy">
     <meta property="og:description" content="A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.">
     
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://blkproxy.iambhvsh.in/">
+    <meta property="twitter:url" content="https://blkproxy.vercel.app/">
     <meta property="twitter:title" content="blkproxy - Developer CORS Proxy">
     <meta property="twitter:description" content="A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.">
 
@@ -124,7 +124,7 @@
                 <div class="bg-black rounded-xl border border-slate-300/10 shadow-2xl p-4 mt-8">
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <p class="text-sm font-mono text-indigo-200 flex-grow text-center sm:text-left overflow-x-auto">
-                            https://blkproxy.iambhvsh.in/api/proxy?url=
+                            https://blkproxy.vercel.app/api/proxy?url=
                         </p>
                         <button id="copy-btn" class="bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300 focus-ring flex items-center gap-2 w-full sm:w-auto justify-center flex-shrink-0">
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -137,7 +137,7 @@
                 
                 <div class="mt-12 rounded-2xl overflow-hidden shadow-2xl border border-slate-300/10">
                     <pre class="text-sm border-0 m-0"><code>const targetUrl = 'https://api.example.com/data';
-const proxyUrl = `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 fetch(proxyUrl)
   .then(response =&gt; response.json())
@@ -245,7 +245,7 @@ fetch(proxyUrl)
             
             const copyBtn = document.getElementById('copy-btn');
             const copyTextSpan = document.getElementById('copy-text');
-            const proxyUrlToCopy = 'https://blkproxy.iambhvsh.in/api/proxy?url=';
+            const proxyUrlToCopy = 'https://blkproxy.vercel.app/api/proxy?url=';
             
             copyBtn.addEventListener('click', async () => {
                 try {
