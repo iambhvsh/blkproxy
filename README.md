@@ -1,12 +1,14 @@
 # blkproxy
 
+> **Note:** This proxy is discontinued. No updates will be received and this project will be maintained as read-only open source.
+
 A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.
 
 Built on Vercel's edge network for low latency and reliability.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iambhvsh/blkproxy)
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fblkproxy.iambhvsh.in%2Fapi%2Fhealth&query=%24.message&label=status&color=green)](https://blkproxy.iambhvsh.in/api/health)
+[![Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fblkproxy.vercel.app%2Fapi%2Fhealth&query=%24.message&label=status&color=green)](https://blkproxy.vercel.app/api/health)
 
 ---
 
@@ -24,7 +26,7 @@ Simply prepend the proxy URL to your target API endpoint.
 
 ```javascript
 const targetUrl = 'https://api.example.com/data';
-const proxyUrl = `https://blkproxy.iambhvsh.in/api/proxy?url=${encodeURIComponent(targetUrl)}`;
+const proxyUrl = `https://blkproxy.vercel.app/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
 fetch(proxyUrl)
   .then(response => response.json())
