@@ -1,5 +1,7 @@
 # blkproxy
 
+> **Note:** This proxy is discontinued. No updates will be received and this project will be maintained as read-only open source.
+
 A lightweight, zero-config CORS proxy designed for developers to bypass cross-origin restrictions during local development and testing.
 
 Built on Vercel's edge network for low latency and reliability.
